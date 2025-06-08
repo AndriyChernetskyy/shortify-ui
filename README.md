@@ -1,54 +1,87 @@
-# React + TypeScript + Vite
+# Shortify UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Shorten your links with ease!
 
-Currently, two official plugins are available:
+🌐 **Live:** [https://gray-hill-08d4fd703.6.azurestaticapps.net/](https://gray-hill-08d4fd703.6.azurestaticapps.net/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![Shortify UI Screenshot](./mainPage_screenshot.png)
 
-## Expanding the ESLint configuration
+## 🔗 Overview
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Shortify UI is a React + Vite application that lets users paste a URL, shorten it via an API, and copy the resulting short link in one click. It's built with:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- **React** & **TypeScript**
+- **Vite** for lightning-fast builds and development
+- **Tailwind CSS** + **DaisyUI** for utility-first styling and pre-built components
+
+## 🚀 Features
+
+- Paste any long URL and generate a short link
+- Copy shortened URLs to clipboard with a single click
+- Responsive, minimalist design
+- Loading and error states
+
+## 📦 Tech Stack
+
+| Tool         | Description                       |
+| ------------ | --------------------------------- |
+| React        | UI library                        |
+| TypeScript   | JavaScript with static types      |
+| Vite         | Build tool and development server |
+| Tailwind CSS | Utility-first CSS framework       |
+| DaisyUI      | Component library for Tailwind    |
+
+## 🛠️ Prerequisites
+
+- **Node.js** v14+
+- **npm** (v6+) or **yarn**
+
+## 🔧 Installation
+
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/<your-org>/shortify-ui.git
+   cd shortify-ui
+   ```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+3. **Configure environment variables**
+   Create a `.env.local` file in the project root with:
+   ```env
+   VITE_API_BASE_URL=https://api.your-shortener.com
+   ```
+
+## 💻 Development
+
+Run the development server with hot reload:
+
+```bash
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open your browser at `http://localhost:5173` (or the port Vite reports).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📦 Build & Preview
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- **Build for production:**
+
+  ```bash
+  npm run build
+  ```
+
+- **Preview production build locally:**
+  ```bash
+  npm run preview
+  ```
+
+## 📄 License
+
+Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
+
+## ✉️ Contact
+
+Andriy Chernetskyy - andriy.chernetskyy99@outlook.com
+
+Project Link: [https://github.com/AndriyChernetskyy/shortify-ui](https://github.com/AndriyChernetskyy/shortify-ui)
