@@ -103,33 +103,30 @@ const HomePage = () => {
           <span className="loading loading-spinner loading-lg mx-auto"></span>
         )}
         {isSuccess && (
-          <div className="card bg-base-200 w-96 shadow-sm mx-auto">
+          <div className="card bg-base-200 w-full max-w-2xl shadow-sm mx-auto">
             <div className="card-body">
               <h2 className="card-title">Your results are here!</h2>
-              <p>
-                <span className="font-semibold">Original URL:</span> <br />
+              <p className="break-all">
+                <span className="font-semibold">Original URL:</span>
+                <br />
                 <a
-                  href={urlData?.url}
-                  className="text-primary hover:underline"
+                  href={urlData!.url}
+                  className="text-primary hover:underline break-all"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {urlData?.url}
+                  {urlData!.url}
                 </a>
               </p>
-              <p>
+              <p className="break-all">
                 <span className="font-semibold">Shortified URL:</span>
                 <br />
                 <a
-                  href={`https://${urlData?.shortUrl}`}
-                  className="text-primary hover:underline"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigateToShortUrl();
-                  }}
-                >
-                  {`https://${urlData?.shortUrl}`}
-                </a>
+                  href={`${window.location.origin}/${urlData!.shortUrl}`}
+                  className="text-primary hover:underline break-all"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >{`${window.location.origin}/${urlData!.shortUrl}`}</a>
               </p>
             </div>
           </div>
