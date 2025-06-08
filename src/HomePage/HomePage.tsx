@@ -115,18 +115,22 @@ const HomePage = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {urlData!.url}
+                  {urlData?.url}
                 </a>
               </p>
               <p className="break-all">
                 <span className="font-semibold">Shortified URL:</span>
                 <br />
                 <a
-                  href={`${window.location.origin}/${urlData!.shortUrl}`}
-                  className="text-primary hover:underline break-all"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >{`${window.location.origin}/${urlData!.shortUrl}`}</a>
+                  href={`https://${urlData?.shortUrl}`}
+                  className="text-primary hover:underline"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateToShortUrl();
+                  }}
+                >
+                  {`https://${urlData?.shortUrl}`}
+                </a>
               </p>
             </div>
           </div>

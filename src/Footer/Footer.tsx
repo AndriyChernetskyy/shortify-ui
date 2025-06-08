@@ -16,7 +16,7 @@ const Footer = () => {
           <p>
             Shortify Ltd.
             <br />
-            Shortening super long urls since 2015
+            Shortening super long urls since 2025
           </p>
         </aside>
       </footer>
