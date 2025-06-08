@@ -1,44 +1,83 @@
-import { use, useState } from "react";
-import { useShortUrlGenerationMutation } from "./hooks/useShortifyUrl";
+import { useEffect, useState } from "react";
 import { useNavigateToShortLinkMutation } from "./hooks/useNavigateToShortLink";
+import { useCreateShortUrlMutation } from "./hooks/useCreateShortUrl";
+import type { UrlMapping } from "./types/urlMapping";
 
 const HomePage = () => {
-  const [url, setUrl] = useState("");
+  const [urlInput, setUrlInput] = useState("");
 
   const {
-    mutate: generateShortUrl,
+    mutateAsync: generateShortUrlAsync,
     isPending,
-    data,
-    isSuccess: isShortUrlSuccess,
-    error,
-  } = useShortUrlGenerationMutation();
+    isSuccess,
+    error: errorResponse,
+  } = useCreateShortUrlMutation();
 
   const { mutateAsync: navigateToShortUrlAsync } =
     useNavigateToShortLinkMutation();
 
-  const shortenUrl = () => {
-    console.log("Shortening URL:", url);
+  const [urlData, setUrlData] = useState<UrlMapping | null>(null);
 
-    generateShortUrl(url);
+  function isValidUrl(url: string) {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  const getShortUrl = async () => {
+    if (!isValidUrl(urlInput)) {
+      setError(new Error("Please enter a valid URL."));
+      return;
+    }
+    const urlMapping = await generateShortUrlAsync(urlInput);
+
+    if (urlMapping !== null) {
+      setUrlData(urlMapping);
+      setUrlInput("");
+      return;
+    }
+
+    if (errorResponse) {
+      setError(errorResponse);
+    }
   };
 
   const navigateToShortUrl = async () => {
-    console.log("Navigating to short URL:", data);
+    if (!urlData?.shortUrl) return;
 
-    const longUrl = await navigateToShortUrlAsync(data);
+    const longUrl = await navigateToShortUrlAsync(urlData.shortUrl);
 
     window.open(longUrl, "_blank");
   };
 
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError(null);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  const dismissError = () => {
+    setError(null);
+  };
+
   return (
     <div
-      className="flex justify-center pt-12 px-4 pb-20 min-h-screen bg-white"
+      className="flex justify-center pt-12 px-4 pb-20 bg-white"
       data-theme="light"
     >
       <div className="w-full max-w-2xl flex flex-col gap-10">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Shorten your links with ease!
+        <div className="flex items-center justify-center">
+          <h1 className="text-2xl font-semibold tracking-tight text-center">
+            Shortify your links with ease!
           </h1>
         </div>
 
@@ -48,14 +87,14 @@ const HomePage = () => {
               type="text"
               className="input flex-grow"
               placeholder="Paste your URL here..."
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
             />
             <button
               className="btn btn-primary whitespace-nowrap"
-              onClick={shortenUrl}
+              onClick={getShortUrl}
             >
-              Shorten URL
+              Shortify URL
             </button>
           </div>
         </fieldset>
@@ -63,34 +102,59 @@ const HomePage = () => {
         {isPending && (
           <span className="loading loading-spinner loading-lg mx-auto"></span>
         )}
-        {isShortUrlSuccess && (
+        {isSuccess && (
           <div className="card bg-base-200 w-96 shadow-sm mx-auto">
             <div className="card-body">
               <h2 className="card-title">Your results are here!</h2>
               <p>
                 <span className="font-semibold">Original URL:</span> <br />
                 <a
-                  href="https://shortify.example.com/abc123"
+                  href={urlData?.url}
                   className="text-primary hover:underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  {url}
+                  {urlData?.url}
                 </a>
               </p>
               <p>
-                <span className="font-semibold">Shortened URL:</span>
+                <span className="font-semibold">Shortified URL:</span>
                 <br />
                 <a
-                  href="https://shortify.example.com/abc123"
+                  href={`https://${urlData?.shortUrl}`}
                   className="text-primary hover:underline"
                   onClick={(e) => {
                     e.preventDefault();
                     navigateToShortUrl();
                   }}
                 >
-                  {`https://${data}`}
+                  {`https://${urlData?.shortUrl}`}
                 </a>
               </p>
             </div>
+          </div>
+        )}
+
+        {error && (
+          <div
+            role="alert"
+            className="alert alert-error mx-auto mt-4 w-full max-w-2xl"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 shrink-0 stroke-current cursor-pointer"
+              fill="none"
+              viewBox="0 0 24 24"
+              onClick={dismissError}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{error.message}</span>
           </div>
         )}
       </div>
