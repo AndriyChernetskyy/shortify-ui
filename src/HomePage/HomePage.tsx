@@ -18,17 +18,20 @@ const HomePage = () => {
 
   const [urlData, setUrlData] = useState<UrlMapping | null>(null);
 
-  function isValidUrl(url: string) {
+  function isValidHttpUrl(value: string): boolean {
     try {
-      new URL(url);
-      return true;
+      const u = new URL(value);
+      return (
+        (u.protocol === "http:" || u.protocol === "https:") &&
+        u.hostname.includes(".")
+      );
     } catch {
       return false;
     }
   }
 
   const getShortUrl = async () => {
-    if (!isValidUrl(urlInput)) {
+    if (!isValidHttpUrl(urlInput)) {
       setError(new Error("Please enter a valid URL."));
       return;
     }
@@ -48,9 +51,14 @@ const HomePage = () => {
   const navigateToShortUrl = async () => {
     if (!urlData?.shortUrl) return;
 
+    const anchor = document.createElement("a");
+    anchor.target = "_blank";
+    anchor.rel = "noopener noreferrer";
+
     const longUrl = await navigateToShortUrlAsync(urlData.shortUrl);
 
-    window.open(longUrl, "_blank");
+    anchor.href = longUrl;
+    anchor.click();
   };
 
   const [error, setError] = useState<Error | null>(null);
@@ -84,9 +92,10 @@ const HomePage = () => {
         <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
           <div className="flex items-center gap-4">
             <input
-              type="text"
+              type="url"
               className="input flex-grow"
               placeholder="Paste your URL here..."
+              pattern="https://.*"
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
             />
