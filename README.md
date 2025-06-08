@@ -17,7 +17,8 @@ Shortify UI is a React + Vite application that lets users paste a URL, shorten i
 ## 🚀 Features
 
 - Paste any long URL and generate a short link
-- Copy shortened URLs to clipboard with a single click
+- Receive shortened URL
+- Navigate to the original URL using shortened version
 - Responsive, minimalist design
 - Loading and error states
 
