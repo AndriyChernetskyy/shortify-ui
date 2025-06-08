@@ -51,14 +51,11 @@ const HomePage = () => {
   const navigateToShortUrl = async () => {
     if (!urlData?.shortUrl) return;
 
-    const anchor = document.createElement("a");
-    anchor.target = "_blank";
-    anchor.rel = "noopener noreferrer";
+    const newTab = window.open("about:blank", "_blank");
 
     const longUrl = await navigateToShortUrlAsync(urlData.shortUrl);
 
-    anchor.href = longUrl;
-    anchor.click();
+    newTab!.location.href = longUrl;
   };
 
   const [error, setError] = useState<Error | null>(null);
