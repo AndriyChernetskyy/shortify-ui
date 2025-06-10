@@ -18,23 +18,9 @@ const HomePage = () => {
 
   const [urlData, setUrlData] = useState<UrlMapping | null>(null);
 
-  function isValidHttpUrl(value: string): boolean {
-    try {
-      const u = new URL(value);
-      return (
-        (u.protocol === "http:" || u.protocol === "https:") &&
-        u.hostname.includes(".")
-      );
-    } catch {
-      return false;
-    }
-  }
+  const getShortUrl = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  const getShortUrl = async () => {
-    if (!isValidHttpUrl(urlInput)) {
-      setError(new Error("Please enter a valid URL."));
-      return;
-    }
     const urlMapping = await generateShortUrlAsync(urlInput);
 
     if (urlMapping !== null) {
@@ -74,6 +60,10 @@ const HomePage = () => {
     setError(null);
   };
 
+  const handleInvalidUrl = (e: React.FormEvent<HTMLInputElement>) => {
+    e.currentTarget.setCustomValidity("Your URL must begin with https://");
+  };
+
   return (
     <div
       className="flex justify-center pt-12 px-4 pb-20 bg-white"
@@ -87,22 +77,28 @@ const HomePage = () => {
         </div>
 
         <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
-          <div className="flex items-center gap-4">
-            <input
-              type="url"
-              className="input flex-grow"
-              placeholder="Paste your URL here..."
-              pattern="https://.*"
-              value={urlInput}
-              onChange={(e) => setUrlInput(e.target.value)}
-            />
-            <button
-              className="btn btn-primary whitespace-nowrap"
-              onClick={getShortUrl}
-            >
-              Shortify URL
-            </button>
-          </div>
+          <form className="form-control flex-grow" onSubmit={getShortUrl}>
+            <div className="flex items-center gap-4">
+              <input
+                type="url"
+                className="input flex-grow"
+                placeholder="Paste your URL here..."
+                pattern="https://.*"
+                onInvalid={handleInvalidUrl}
+                value={urlInput}
+                onChange={(e) => {
+                  e.currentTarget.setCustomValidity("");
+                  setUrlInput(e.target.value);
+                }}
+              />
+              <button
+                type="submit"
+                className="btn btn-primary whitespace-nowrap"
+              >
+                Shortify URL
+              </button>
+            </div>
+          </form>
         </fieldset>
 
         {isPending && (
